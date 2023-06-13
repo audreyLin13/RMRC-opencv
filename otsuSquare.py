@@ -10,7 +10,7 @@ ap.add_argument("-i", "--image", required = True,
 args = vars(ap.parse_args())
 
 img = cv2.imread(args["image"])
-gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 blurred = cv2.GaussianBlur(img, (5, 5), 0)
 cv2.imshow("image", img)
 
@@ -19,16 +19,10 @@ print("tsu's threshold: {}.format(T)")
 thresh = img.copy()
 thresh[thresh > T] = 255
 thresh[thresh < 255] = 0
-thresh = cv2.bitwise_not(thresh)
+img = cv2.bitwise_not(thresh)
+cv2.imshow("test", img)
 
-T = mahotas.thresholding.rc(blurred)
-thresh = img.copy()
-thresh[thresh > T] = 255
-thresh[thresh < 255] = 0
-thresh = cv2.bitwise_not(thresh)
-# gray = c/v2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-ret,thresh = cv2.threshold(gray,50,255,0)
+ret,thresh = cv2.threshold(img,50,255,0)
 contours,hierarchy = cv2.findContours(thresh, 1, 2)
 print("Number of contours detected:", len(contours))
 
@@ -42,7 +36,7 @@ for cnt in contours:
         if ratio >= 0.8 and ratio <= 1.2:
             print("Length of w:",w)
             print("Ratio:", ratio)
-            img = cv2.drawContours(img, [cnt], -1, (0,255,255), 3)
+            img = cv2.drawContours(thresh, [cnt], -1, (0,255,255), 3)
             cv2.putText(img, 'Square', (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 0), 2)
 cv2.imshow("Shapes", img)
 

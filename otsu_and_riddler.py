@@ -26,6 +26,10 @@ print("Riddler-Calvard: {}".format(T))
 thresh = image.copy()
 thresh[thresh > T] = 255
 thresh[thresh < 255] = 0
-thresh = cv2.bitwise_not(thresh)
-cv2.imshow("Riddler-Calvard", thresh)
+img = cv2.bitwise_not(thresh)
+cv2.imshow("Riddler-Calvard", img)
+
+ret,thresh = cv2.threshold(img,50,255,0)
+contours,hierarchy = cv2.findContours(thresh, 1, 2)
+print("Number of contours detected:", len(contours))
 cv2.waitKey(0)
