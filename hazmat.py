@@ -18,7 +18,7 @@ img = cv2.imread(args["image"])
 
 # CHANGE THRESHOLD AS NEEDED
 lowerThresh = np.array([0, 0, 0])  # lower thresh for black
-upperThresh = np.array([130, 130, 130])  # upper thresh for white
+upperThresh = np.array([90, 90, 90])  # upper thresh for white
 
 # Create a binary mask based on the color threshold range
 mask = cv2.inRange(img, lowerThresh, upperThresh)
