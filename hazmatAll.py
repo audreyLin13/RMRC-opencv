@@ -7,13 +7,6 @@ import argparse
 import mahotas
 import pytesseract
 import cv2
-
-# ap = argparse.ArgumentParser()
-# ap.add_argument("-i", "--image", required = True,
-#     help = "Path to the image")
-# args = vars(ap.parse_args())
-
-# img = cv2.imread(args["image"])
 def processScreenshot(img, val):
 
     # CHANGE THRESHOLD AS NEEDED
@@ -55,8 +48,6 @@ def processScreenshot(img, val):
             if w > 63:
                 count = i
                 if ratio >= 0.8 and ratio <= 1.2:
-                    # print("Length of w:",w)
-                    # print("Ratio:", ratio)
                     img = cv2.drawContours(img, [cnt], -1, (255,0,0), 3)
                     cv2.putText(img, 'Square', (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 255), 2)
                     cv2.imshow("squares", img)
@@ -65,36 +56,23 @@ def processScreenshot(img, val):
                     rows, cols = cropped.shape[:2]
                     matrixCW45 = cv2.getRotationMatrix2D((cols/2, rows/2), -45, 1)
                     cw45 = cv2.warpAffine(cropped, matrixCW45, (cols, rows))
-                    # cv2.imshow(f"45 cw {count}", cw45)
-
-                    #only need for testing purposes
-                    # matrix90 = cv2.getRotationMatrix2D((cols/2, rows/2), -90, 1)
-                    # cw90 = cv2.warpAffine(cropped, matrix90, (cols, rows))
-                    # cv2.imshow(f"90 cw {count}", cw90)
 
                     matrixCCW45 = cv2.getRotationMatrix2D((cols/2, rows/2), 45, 1)
                     ccw45 = cv2.warpAffine(cropped, matrixCCW45, (cols, rows))
-                        # cv2.imshow(f"45 ccw {count}", ccw45)
-
-                        #only need for testing purposes
-                        # matrix270 = cv2.getRotationMatrix2D((cols/2, rows/2), 180, 1)
-                        # cw180 = cv2.warpAffine(cropped, matrix270, (cols, rows))
-                        # cv2.imshow(f"180 rotation {count}", cw180)
+            
 
                     matrixCCW135 = cv2.getRotationMatrix2D((cols/2, rows/2), 135, 1)
                     ccw135 = cv2.warpAffine(cropped, matrixCCW135, (cols, rows))
-                        # cv2.imshow(f"135 ccw {count}", ccw135)
 
                     matrixCW135 = cv2.getRotationMatrix2D((cols/2, rows/2), -135, 1)
                     cw135 = cv2.warpAffine(cropped, matrixCW135, (cols, rows))
-                        # cv2.imshow(f"135 cw {count}", cw135)
                     imageList.append(cw45)
                     imageList.append(ccw45)
                     imageList.append(ccw135)
                     imageList.append(cw135)  
                     imageList.append(cropped)
             
-    myDict = {}
+    myDict = {} 
     for i, image in enumerate(imageList):
         width, height, _ = image.shape
         x1 = int(0)
@@ -106,10 +84,7 @@ def processScreenshot(img, val):
         cv2.imshow(f"image {i}", onlyText)
         text = pytesseract.pytesseract.image_to_string(onlyText, config="--psm 6")
         text = removeSpecialCharacter(text)
-        # if text == "":
-        #     text = pytesseract.pytesseract.image_to_string(onlyText, config="--psm 6")
         if text != "":
-            # print(f"Image to string for image {i}: {text}")
             myDict.update({text:i})
 
     # print(myDict)
@@ -136,6 +111,7 @@ def main():
     cv2.waitKey(3000)
 
     received = []
+    #lower the number, less black. higher the number, more black
     threshVals = [90, 100, 110, 120, 130, 140, 150, 160, 170] 
     count = 0
     breakOrNot = False
@@ -151,9 +127,6 @@ def main():
     print(f"found {len(allReceived)} out of {expected} hazmat labels:")
     for i in allReceived:
         print(i)
-
-
-    
 
 if __name__ == "__main__":
     main()

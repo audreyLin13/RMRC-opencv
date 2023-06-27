@@ -11,10 +11,10 @@ def screenshot():
 
     print("Press <Enter> when you are ready.")
     input()
-    print("Click 'q' when satisfied with the image.")
+    print("Click 'g' when satisfied with the image.")
 
     key = ""
-    while key != ord("q"):
+    while key != ord("g"):
         _, frame = cap.read()
         cv2.imshow("image", frame)
         key = cv2.waitKey(1)

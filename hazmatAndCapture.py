@@ -18,7 +18,7 @@ def processScreenshot(img):
 
     # CHANGE THRESHOLD AS NEEDED
     lowerThresh = np.array([0, 0, 0])  # lower thresh for black
-    upperThresh = np.array([110, 110, 110])  # upper thresh for white
+    upperThresh = np.array([90, 90, 90])  # upper thresh for white
 
     # Create a binary mask based on the color threshold range
     mask = cv2.inRange(img, lowerThresh, upperThresh)
@@ -63,31 +63,22 @@ def processScreenshot(img):
                     cropped = img[y:y+h, x:x+w]
                     cropped = cv2.bitwise_and(cropped, img[y:y+h, x:x+w])
                     rows, cols = cropped.shape[:2]
+                    #corner A to upright
                     matrixCW45 = cv2.getRotationMatrix2D((cols/2, rows/2), -45, 1)
                     cw45 = cv2.warpAffine(cropped, matrixCW45, (cols, rows))
-                    # cv2.imshow(f"45 cw {count}", cw45)
 
-                    #only need for testing purposes
-                    # matrix90 = cv2.getRotationMatrix2D((cols/2, rows/2), -90, 1)
-                    # cw90 = cv2.warpAffine(cropped, matrix90, (cols, rows))
-                    # cv2.imshow(f"90 cw {count}", cw90)
-
+                    #corner B to upright
                     matrixCCW45 = cv2.getRotationMatrix2D((cols/2, rows/2), 45, 1)
                     ccw45 = cv2.warpAffine(cropped, matrixCCW45, (cols, rows))
-                        # cv2.imshow(f"45 ccw {count}", ccw45)
 
-                        #only need for testing purposes
-                        # matrix270 = cv2.getRotationMatrix2D((cols/2, rows/2), 180, 1)
-                        # cw180 = cv2.warpAffine(cropped, matrix270, (cols, rows))
-                        # cv2.imshow(f"180 rotation {count}", cw180)
-
+                    #corner C to upright
                     matrixCCW135 = cv2.getRotationMatrix2D((cols/2, rows/2), 135, 1)
                     ccw135 = cv2.warpAffine(cropped, matrixCCW135, (cols, rows))
-                        # cv2.imshow(f"135 ccw {count}", ccw135)
 
+                    #corner D to upright
                     matrixCW135 = cv2.getRotationMatrix2D((cols/2, rows/2), -135, 1)
                     cw135 = cv2.warpAffine(cropped, matrixCW135, (cols, rows))
-                        # cv2.imshow(f"135 cw {count}", cw135)
+
                     imageList.append(cw45)
                     imageList.append(ccw45)
                     imageList.append(ccw135)
@@ -96,6 +87,7 @@ def processScreenshot(img):
             
     myDict = {}
     for i, image in enumerate(imageList):
+        #reduces image to text only
         width, height, _ = image.shape
         x1 = int(0)
         y1 = int(height/2 - (height*0.15))
@@ -106,13 +98,10 @@ def processScreenshot(img):
         cv2.imshow(f"image {i}", onlyText)
         text = pytesseract.pytesseract.image_to_string(onlyText, config="--psm 6")
         text = removeSpecialCharacter(text)
-        # if text == "":
-        #     text = pytesseract.pytesseract.image_to_string(onlyText, config="--psm 6")
         if text != "":
-            # print(f"Image to string for image {i}: {text}")
             myDict.update({text:i})
 
-    # print(myDict)
+    #words to check against; add any hazmat labels as needed
     words = ["explosive", "blasting agent", "flammable solid", "non flammable gas", "inhalation hazard", "infectious substance", "flammable liquid", 
     "spontaneously combustible", "dangerous when wet", "oxidizer", "organic peroxide", "poison", "corrosive", "flammable gas"]
     for key in myDict:  
@@ -124,8 +113,6 @@ def processScreenshot(img):
             print(f"the starting word is {key}", end="")
             print()
             print(f"the closest value is {closest}")
-            # print(f"the distance is {distance}")
-            # print(f"ratio: {ratio}")
             print()
 def main():
     # Capture the screenshot
