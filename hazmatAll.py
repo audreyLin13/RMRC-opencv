@@ -72,7 +72,7 @@ def processScreenshot(img, val):
                     imageList.append(cw135)  
                     imageList.append(cropped)
             
-    myDict = {} 
+    myDict = {}  
     for i, image in enumerate(imageList):
         width, height, _ = image.shape
         x1 = int(0)
@@ -84,7 +84,10 @@ def processScreenshot(img, val):
         cv2.imshow(f"image {i}", onlyText)
         text = pytesseract.pytesseract.image_to_string(onlyText, config="--psm 6")
         text = removeSpecialCharacter(text)
+        # if text == "":
+        #     text = pytesseract.pytesseract.image_to_string(onlyText, config="--psm 6")
         if text != "":
+            # print(f"Image to string for image {i}: {text}")
             myDict.update({text:i})
 
     # print(myDict)
