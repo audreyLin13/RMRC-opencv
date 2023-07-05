@@ -91,7 +91,7 @@ def processScreenshot(img, val):
             myDict.update({text:i})
 
     # print(myDict)
-    words = ["explosive", "blasting agent", "non flammable gas", "inhalation hazard", "infectious substance", "flammable liquid", 
+    words = ["explosives", "explosive", "oxygen", "fuel oil", "radioactive", "blasting agent", "non flammable gas", "inhalation hazard", "infectious substance", "flammable liquid", 
     "spontaneously combustible", "dangerous when wet", "oxidizer", "organic peroxide", "flammable solid", "poison", "corrosive", "flammable gas"]
     correct = []
     for key in myDict:  

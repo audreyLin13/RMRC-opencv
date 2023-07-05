@@ -13,7 +13,7 @@ args = vars(ap.parse_args())
 img = cv2.imread(args["image"])
 
 lowerThresh = np.array([0, 0, 0])  # lower thresh for black
-upperThresh = np.array([200, 200, 200])  # upper thresh for white
+upperThresh = np.array([150, 150, 150])  # upper thresh for white
 
 # Create a binary mask based on the color threshold range
 mask = cv2.inRange(img, lowerThresh, upperThresh)
@@ -24,5 +24,5 @@ binary[mask > 0] = 255
 
 inverted_binary = cv2.bitwise_not(binary)
 
-cv2.imshow('Inverted Binary Image', inverted_binary)
+cv2.imshow('binary', inverted_binary)
 cv2.waitKey(0)

@@ -11,9 +11,24 @@ ap.add_argument("-i", "--image", required = True,
 args = vars(ap.parse_args())
 
 img = cv2.imread(args["image"])
-cv2.imshow("image", img)
 
-text = pytesseract.pytesseract.image_to_string(img, config="--psm 8")
+# lowerThresh = np.array([0, 0, 0])  # lower thresh for black
+# upperThresh = np.array([150, 150, 150])  # upper thresh for white
+
+# # Create a binary mask based on the color threshold range
+# mask = cv2.inRange(img, lowerThresh, upperThresh)
+
+# # apply mask
+# binary = np.zeros_like(img)
+# binary[mask > 0] = 255
+
+# inverted_binary = cv2.bitwise_not(binary)
+
+# cv2.imshow('binary', inverted_binary)
+
+text = pytesseract.pytesseract.image_to_string(img, config="--psm 6")
 print(text)
+
+
 
 cv2.waitKey(0)
