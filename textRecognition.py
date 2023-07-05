@@ -1,34 +1,28 @@
-from __future__ import print_function
-import numpy as np 
+from PIL import Image
+import numpy as np
 import argparse
-import mahotas
 import pytesseract
 import cv2
+from binary import *
 
 ap = argparse.ArgumentParser()
-ap.add_argument("-i", "--image", required = True,
-    help = "Path to the image")
+ap.add_argument("-i", "--image", required=True,
+                help="Path to the image")
 args = vars(ap.parse_args())
 
 img = cv2.imread(args["image"])
 
-# lowerThresh = np.array([0, 0, 0])  # lower thresh for black
-# upperThresh = np.array([150, 150, 150])  # upper thresh for white
+img = binary(img)
 
-# # Create a binary mask based on the color threshold range
-# mask = cv2.inRange(img, lowerThresh, upperThresh)
+cv2.imshow("imported binary", img)
 
-# # apply mask
-# binary = np.zeros_like(img)
-# binary[mask > 0] = 255
+# Convert NumPy array to PIL image
+pil_image = Image.fromarray(img)
 
-# inverted_binary = cv2.bitwise_not(binary)
+pil_image.show()
 
-# cv2.imshow('binary', inverted_binary)
-
-text = pytesseract.pytesseract.image_to_string(img, config="--psm 6")
+text = pytesseract.pytesseract.image_to_string(pil_image, config="--psm 6")
 print(text)
 
-
-
+# Display the image using OpenCV's imshow
 cv2.waitKey(0)
